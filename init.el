@@ -57,6 +57,7 @@ This function should only modify configuration layer settings."
      c-c++
      cmake
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
+     waldon-org
      )
 
    ;; List of additional packages that will be installed without being
