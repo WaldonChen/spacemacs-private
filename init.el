@@ -40,22 +40,36 @@ This function should only modify configuration layer settings."
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ivy
-     auto-completion
+     (auto-completion :variables
+                      auto-complete-enable-sort-by-usage t
+                      auto-completion-enable-snippets-in-popup t
+                      :disabled-for org markdown)
      better-defaults
      emacs-lisp
-     git
+     (git :variables git-magit-status-fullscreen t)
      ;; markdown
      multiple-cursors
      neotree
-     org
+     (org :variables
+          org-want-todo-bindings t
+          org-enable-org-journal-support t
+          org-journal-dir "~/Documents/org/journal/"
+          org-journal-date-prefix "#+TITLE: "
+          org-journal-date-format "%A, %B %d %Y")
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     spell-checking
-     syntax-checking
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil)
+     (syntax-checking :variables
+                      syntax-checking-enable-by-default nil
+                      syntax-checking-enable-tooltips nil)
      ;; version-control
-     c-c++
+     (c-c++ :variables c-c++-default-mode-for-headers 'c++-mode)
      cmake
+     python
+     graphviz
+     bibtex
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      waldon-org
      )
@@ -445,10 +459,15 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
+  ;; (setq configuration-layer-elpa-archives
+  ;;       '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+  ;;         ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+  ;;         ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
   (setq configuration-layer-elpa-archives
         '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")
           ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+
   )
 
 (defun dotspacemacs/user-load ()
