@@ -32,6 +32,7 @@
 (defconst waldon-org-packages
   '(
     (org :location local)
+    org-ref
     ))
 
 (defun waldon-org/post-init-org ()
@@ -56,7 +57,7 @@
       ;; "☰" "☷" "☯" "☭" "◉" "○" "✸" "✿" "■" "◆" "▲" "▶"
       (setq org-bullets-bullet-list '("☰" "☷" "☯" "☭" "◉" "○" "✸" "■" "◆" "▶"))
 
-      (setq org-directory "~/OneDrive/org")
+      (setq org-directory "~/Documents/org")
 
       (setq org-agenda-file-note (expand-file-name "notes.org" org-directory))
       (setq org-agenda-file-gtd (expand-file-name "task.org" org-directory))
@@ -216,7 +217,7 @@
       (add-to-list 'org-capture-templates
                    '("i" "Inbox" entry
                      (file org-default-notes-file)
-                     "* %U - %^{heading} %^g\n  %?\n"))
+                     "* TODO %^{heading} %^g\n  %U\n  %?\n"))
       ;; Snippets
       (add-to-list 'org-capture-templates
                    `("s" "Snippets" entry
@@ -444,5 +445,17 @@
               'waldon-org/org-latex-header-blocks-filter)
     )
   )
+
+(defun waldon-org/post-init-org-ref ()
+  (use-package org-ref
+    :init
+    (setq org-ref-default-bibliography
+          (remove-if-not (lambda (filename)
+                           (equal "bib" (file-name-extension filename)))
+                         (directory-files-recursively "~/Documents/Papers/"
+                                                      directory-files-no-dot-files-regexp))
+          org-ref-pdf-directory "~/Documents/Papers/"
+          org-ref-bibliography-notes "~/Documents/Papers/notes.org")
+    ))
 
 ;;; packages.el ends here
