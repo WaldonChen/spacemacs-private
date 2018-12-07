@@ -436,6 +436,12 @@
          (plantuml . nil)
          (ditaa . nil)))
       )
+
+    (require 'ox-extra)
+    (ox-extras-activate '(ignore-headlines))
+
+    (add-hook 'org-export-before-parsing-hook
+              'waldon-org/org-latex-header-blocks-filter)
     )
   )
 

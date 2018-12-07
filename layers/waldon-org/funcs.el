@@ -278,3 +278,37 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     (if (waldon-org/is-subproject-p)
         nil
       next-headline)))
+
+(defun waldon-org/org-latex-header-blocks-filter (backend)
+  (when (org-export-derived-backend-p backend 'latex)
+    (let ((positions
+           (org-element-map (org-element-parse-buffer 'greater-element nil) 'export-block
+             (lambda (block)
+               (when (and (string= (org-element-property :type block) "LATEX")
+                          (string= (org-export-read-attribute
+                                    :header block :header)
+                                   "yes"))
+                 (list (org-element-property :begin block)
+                       (org-element-property :end block)
+                       (org-element-property :post-affiliated block)))))))
+      (mapc (lambda (pos)
+              (let* ((beg (first pos))
+                     (end (second pos))
+                     (post-affiliated (third pos))
+                     (contents-lines (cdr (butlast
+                                           (split-string (buffer-substring-no-properties post-affiliated end) "\n")
+                                           3))
+                                     ))
+                (delete-region beg end)
+                (dolist (line contents-lines)
+                  (progn
+                    (insert (concat "#+latex_header: "
+                                        ;(replace-regexp-in-string "\\` *" "" line)
+                                    line
+                                    "\n"))))
+                )
+              )
+            ;; go in reverse, to avoid wrecking the numeric positions
+            ;; earlier in the file
+            (reverse positions))))
+  )
