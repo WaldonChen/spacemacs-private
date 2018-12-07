@@ -31,8 +31,9 @@
 
 (defconst waldon-org-packages
   '(
-    (org :location local)
+    org
     org-ref
+    (ox-latex-subfigure :location local)
     ))
 
 (defun waldon-org/post-init-org ()
@@ -457,5 +458,12 @@
           org-ref-pdf-directory "~/Documents/Papers/"
           org-ref-bibliography-notes "~/Documents/Papers/notes.org")
     ))
+
+(defun waldon-org/init-ox-latex-subfigure ()
+  (use-package ox-latex-subfigure
+    :init
+    (setq org-latex-prefer-user-labels t)
+    :config (require 'ox-latex-subfigure))
+  )
 
 ;;; packages.el ends here
