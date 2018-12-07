@@ -317,59 +317,105 @@
 
       (require 'ox-publish)
 
-      (add-to-list 'org-latex-classes '("ctexart" "\\documentclass[11pt]{ctexart}
-                                        [NO-DEFAULT-PACKAGES]
-                                        \\usepackage[utf8]{inputenc}
-                                        \\usepackage[T1]{fontenc}
-                                        \\usepackage{fixltx2e}
-                                        \\usepackage{graphicx}
-                                        \\usepackage{longtable}
-                                        \\usepackage{float}
-                                        \\usepackage{wrapfig}
-                                        \\usepackage{rotating}
-                                        \\usepackage[normalem]{ulem}
-                                        \\usepackage{amsmath}
-                                        \\usepackage{textcomp}
-                                        \\usepackage{marvosym}
-                                        \\usepackage{wasysym}
-                                        \\usepackage{amssymb}
-                                        \\usepackage{booktabs}
-                                        \\usepackage[colorlinks,linkcolor=black,anchorcolor=black,citecolor=black]{hyperref}
-                                        \\tolerance=1000
-                                        \\usepackage{listings}
-                                        \\usepackage{xcolor}
-                                        \\lstset{
-                                        %行号
-                                        numbers=left,
-                                        %背景框
-                                        framexleftmargin=10mm,
-                                        frame=none,
-                                        %背景色
-                                        %backgroundcolor=\\color[rgb]{1,1,0.76},
-                                        backgroundcolor=\\color[RGB]{245,245,244},
-                                        %样式
-                                        keywordstyle=\\bf\\color{blue},
-                                        identifierstyle=\\bf,
-                                        numberstyle=\\color[RGB]{0,192,192},
-                                        commentstyle=\\it\\color[RGB]{0,96,96},
-                                        stringstyle=\\rmfamily\\slshape\\color[RGB]{128,0,0},
-                                        %显示空格
-                                        showstringspaces=false
-                                        }
-                                        "
-                                        ("\\section{%s}" . "\\section*{%s}")
-                                        ("\\subsection{%s}" . "\\subsection*{%s}")
-                                        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                                        ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                                        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      (setq org-latex-classes nil)
+      (add-to-list 'org-latex-classes
+                   '("article" "\\documentclass[11pt]{article}"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("report" "\\documentclass[11pt]{report}"
+                     ("\\part{%s}" . "\\part*{%s}")
+                     ("\\chapter{%s}" . "\\chapter*{%s}")
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("book" "\\documentclass[11pt]{book}"
+                     ("\\part{%s}" . "\\part*{%s}")
+                     ("\\chapter{%s}" . "\\chapter*{%s}")
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("ctexart" "\\documentclass[11pt]{ctexart}"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("ctexrep" "\\documentclass[11pt]{ctexrep}"
+                     ("\\part{%s}" . "\\part*{%s}")
+                     ("\\chapter{%s}" . "\\chapter*{%s}")
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("ctexbook" "\\documentclass[11pt]{ctexbook}"
+                     ("\\part{%s}" . "\\part*{%s}")
+                     ("\\chapter{%s}" . "\\chapter*{%s}")
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("ustcthesis" "\\documentclass{ustcthesis}"
+                     ("\\chapter{%s}" . "\\chapter*{%s}")
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("cn-article" "\\documentclass[11pt]{ctexart}
+[NO-DEFAULT-PACKAGES]
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{fixltx2e}
+\\usepackage{graphicx}
+\\usepackage{longtable}
+\\usepackage{float}
+\\usepackage{wrapfig}
+\\usepackage{rotating}
+\\usepackage[normalem]{ulem}
+\\usepackage{amsmath}
+\\usepackage{textcomp}
+\\usepackage{marvosym}
+\\usepackage{wasysym}
+\\usepackage{amssymb}
+\\usepackage{booktabs}
+\\usepackage[colorlinks,linkcolor=black,anchorcolor=black,citecolor=black]{hyperref}
+\\tolerance=1000
+\\usepackage{listings}
+\\usepackage{xcolor}
+\\lstset{
+  %行号
+  numbers=left,
+  %背景框
+  framexleftmargin=10mm,
+  frame=lines,
+  %背景色
+  backgroundcolor=\\color[RGB]{245,245,244},
+  %样式
+  keywordstyle=\\bf\\color{blue},
+  identifierstyle=\\bf,
+  numberstyle=\\color[RGB]{0,192,192},
+  commentstyle=\\it\\color[RGB]{0,96,96},
+  stringstyle=\\rmfamily\\slshape\\color[RGB]{128,0,0},
+  %显示空格
+  showstringspaces=false
+}"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
       (setq org-latex-default-class "ctexart")
       (setq org-latex-pdf-process
-            '(
-              "xelatex -interaction nonstopmode -output-directory %o %f"
-              "xelatex -interaction nonstopmode -output-directory %o %f"
-              "xelatex -interaction nonstopmode -output-directory %o %f"
-              "rm -fr %b.out %b.log %b.tex auto"))
+            '("latexmk -pdflatex='xelatex -interaction nonstopmode' -pdf -bibtex -outdir='%o' -f %f"))
 
       (setq org-latex-listings t)
 
