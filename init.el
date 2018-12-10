@@ -66,11 +66,15 @@ This function should only modify configuration layer settings."
                       syntax-checking-enable-tooltips nil)
      ;; version-control
      (c-c++ :variables c-c++-default-mode-for-headers 'c++-mode)
+     (ibuffer :variables ibuffer-group-buffers-by 'projects)
      cmake
      python
      graphviz
      bibtex
-     (ibuffer :variables ibuffer-group-buffers-by 'projects)
+     (latex :variables
+            latex-enable-folding t
+            latex-enable-magic t)
+     html
      waldon-org
      )
 

@@ -69,11 +69,11 @@
       (setq org-agenda-files (list org-directory))
 
       (setq org-todo-keywords
-            '((sequence "TODO(t)" "FEEDBACK(e!)" "VERIFY(j)" "STARTED(g!)" "|" "DONE(d!)")
+            '((sequence "TODO(t)" "FEEDBACK(e!)" "VERIFY(j)" "STARTED(g!)" "|" "DONE(d@/!)" "ABORT(a@/!)")
               (sequence "NEXT(n)" "SPECIFIED(i!)")
               (sequence "WAITTING(w)" "SOMEDAY(m)" "|" "CANCELLED(c@)")
               (sequence "REPORT(r@)" "BUG(b@)" "KNOWN-CAUSE(k@)" "|" "FIXED(f!)")
-              (sequence "SUBMITTED(s!)" "REVISION(v)" "|" "ACCEPTED(a!)" "PUBLISHED(p!)")))
+              (sequence "SUBMITTED(s!)" "REVISION(v)" "|" "ACCEPTED(A!)" "PUBLISHED(p!)")))
 
       (setq org-tag-alist
             '((:startgroup)
@@ -193,43 +193,59 @@
 
       ;; configure org-capture templates
       (setq org-capture-templates nil)
-      (add-to-list 'org-capture-templates '("t" "Tasks"))
-      ;; 阅读任务
-      (add-to-list 'org-capture-templates
-                   '("tr" "Reading Task" entry
-                     (file+olp org-agenda-file-gtd "Reading" "Book")
-                     "* TODO %^{标题}\n  %u\n  %a\n" :clock-in t :clock-resume t))
-      ;; 工作任务
-      (add-to-list 'org-capture-templates
-                   `("tw" "Work Task" entry
-                     (file+headline org-agenda-file-gtd "Work")
-                     "* TODO %^{任务名}\n  %u\n  %a\n" :clock-in t :clock-resume t))
-      ;; 项目任务
-      (add-to-list 'org-capture-templates
-                   `("tp" "Task in Project" entry
-                     (file+headline org-agenda-file-gtd "Projects")
-                     "* TODO %^{任务名}\n  %u\n  %a\n" :clock-in t :clock-resume t))
-      ;; 日记
-      (add-to-list 'org-capture-templates
-                   `("j" "Journal" entry
-                     (file+datetree org-agenda-file-journal)
-                     "* %U - %^{heading}\n  %?"))
-      ;; 未分类任务
+
+      ;; 未分类内容
       (add-to-list 'org-capture-templates
                    '("i" "Inbox" entry
                      (file org-default-notes-file)
-                     "* TODO %^{heading} %^g\n  %U\n  %?\n"))
+                     "* %U - %^{标题} %^g\n  %?\n" :empty-lines 1))
+      ;; 任务系统
+      (add-to-list 'org-capture-templates '("t" "Tasks"))
+      ;; 普通任务
+      (add-to-list 'org-capture-templates
+                   '("ti" "General Task" entry
+                     (file+olp org-agenda-file-gtd "Inbox")
+                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
+                     :empty-lines 1))
+      ;; 书籍阅读任务
+      (add-to-list 'org-capture-templates
+                   '("tb" "Book Reading Task" entry
+                     (file+olp org-agenda-file-gtd "Reading" "Book")
+                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
+                     :empty-lines 1))
+      ;; 论文阅读任务
+      (add-to-list 'org-capture-templates
+                   '("tp" "Paper Reading Task" entry
+                     (file+olp org-agenda-file-gtd "Reading" "Paper")
+                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
+                     :empty-lines 1))
+      ;; 工作任务
+      (add-to-list 'org-capture-templates
+                   '("tw" "Work Task" entry
+                     (file+olp org-agenda-file-gtd "Work")
+                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
+                     :clock-in t :clock-resume t :empty-lines 1))
+      ;; 写作任务
+      (add-to-list 'org-capture-templates
+                   '("tB" "Blog Writing Task" entry
+                     (file+olp org-agenda-file-gtd "Knowledge" "Blog")
+                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
+                     :empty-lines 1))
       ;; Snippets
       (add-to-list 'org-capture-templates
                    `("s" "Snippets" entry
                      (file org-agenda-file-code-snippet)
-                     "* %^{heading} %t %^g\n  %?\n"))
+                     "* %^{heading} %t %^g\n  %?\n" :empty-lines 1))
+      ;; 日记
+      (add-to-list 'org-capture-templates
+                   `("j" "Journal" entry
+                     (file+datetree org-agenda-file-journal)
+                     "* %U - %^{heading} %^g\n  %?\n" :empty-lines 1))
       ;; 账单
       (add-to-list 'org-capture-templates
                    `("b" "Billing" plain
                      (file+function org-agenda-file-private waldon-org/find-month-tree)
-                     "* %^{heading} %t %^g\n  %?\n"
-                     " | %U | %^{类别} | %^{描述} | %^{金额} |" :kill-buffer t))
+                     "   | %U | %^{类别} | %^{描述} | %^{金额} | %^{备注} |" :kill-buffer t))
       ;; 联系人
       (add-to-list 'org-capture-templates
                    `("c" "Contacts" entry
