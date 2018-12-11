@@ -35,6 +35,7 @@
     org-ref
     org-journal
     (ox-latex-subfigure :location local)
+    (ibuffer-hydra :location local)
     ))
 
 (defun waldon-org/post-init-org ()
@@ -500,4 +501,13 @@
       (setq org-journal-enable-agenda-integration t)
       )))
 
+(defun waldon-org/init-ibuffer-hydra ()
+  (use-package ibuffer-hydra
+    :after (ibuffer)
+    :init
+    (add-hook 'ibuffer-hook #'hydra-ibuffer-main/body)
+    :config
+    ;(require 'ibuffer-hydra)
+    (define-key ibuffer-mode-map "." 'hydra-ibuffer-main/body)
+    ))
 ;;; packages.el ends here
