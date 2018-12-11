@@ -33,6 +33,7 @@
   '(
     org
     org-ref
+    org-journal
     (ox-latex-subfigure :location local)
     ))
 
@@ -79,6 +80,7 @@
             '((:startgroup)
               ("@office" . ?o) ("@home" . ?H) ("@way" . ?e)
               (:endgroup)
+              ("secret" . ?s)
               ("WAITTING" . ?w)
               ("HOLD" . ?h)
               ("PERSONAL" . ?P)
@@ -103,8 +105,17 @@
 
       ;; 用於加密的 GPG 金鑰
       ;; 可以設定任何 ID 或是設成 nil 來使用對稱式加密 (symmetric encryption)
-      (setq org-crypt-key nil)
+      (setq org-crypt-key "waldonchen@gmail.com")
 
+      ;;(setq auto-save-default nil)
+      ;; Auto-saving does not cooperate with org-crypt.el: so you need
+      ;; to turn it off if you plan to use org-crypt.el quite often.
+      ;; Otherwise, you'll get an (annoying) message each time you
+      ;; start Org.
+
+      ;; To turn it off only locally, you can insert this:
+      ;;
+      ;; # -*- buffer-auto-save-file-name: nil; -*-
 
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Org Agenda
@@ -479,7 +490,14 @@
   (use-package ox-latex-subfigure
     :init
     (setq org-latex-prefer-user-labels t)
-    :config (require 'ox-latex-subfigure))
-  )
+    :config (require 'ox-latex-subfigure)))
+
+(defun waldon-org/post-init-org-journal ()
+  (use-package org-journal
+    :config
+    (progn
+      (setq org-journal-enable-encryption t)
+      (setq org-journal-enable-agenda-integration t)
+      )))
 
 ;;; packages.el ends here
