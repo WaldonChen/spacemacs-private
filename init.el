@@ -50,12 +50,7 @@ This function should only modify configuration layer settings."
      ;; markdown
      multiple-cursors
      neotree
-     (org :variables
-          org-want-todo-bindings t
-          org-enable-org-journal-support t
-          org-journal-dir "~/Documents/org/journal/"
-          org-journal-date-prefix "#+TITLE: "
-          org-journal-date-format "%A, %B %d %Y")
+     (org :variables org-want-todo-bindings t)
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)

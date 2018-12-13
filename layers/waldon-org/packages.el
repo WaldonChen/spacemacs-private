@@ -33,7 +33,6 @@
   '(
     org
     org-ref
-    org-journal
     (ox-latex-subfigure :location local)
     (ibuffer-hydra :location local)
     ))
@@ -247,12 +246,12 @@
       (add-to-list 'org-capture-templates
                    `("s" "Snippets" entry
                      (file org-agenda-file-code-snippet)
-                     "* %^{heading} %t %^g\n  %?\n" :empty-lines 1))
+                     "* %^{标题} %t %^g\n  %?\n" :empty-lines 1))
       ;; 日记
       (add-to-list 'org-capture-templates
                    `("j" "Journal" entry
                      (file+datetree org-agenda-file-journal)
-                     "* %U - %^{heading} %^g\n  %?\n" :empty-lines 1))
+                     "* %U - %^{标题} %^g\n  %?\n" :empty-lines 1))
       ;; 账单
       (add-to-list 'org-capture-templates
                    `("b" "Billing" plain
@@ -391,7 +390,10 @@
                      ("\\subsection{%s}" . "\\subsection*{%s}")
                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
       (add-to-list 'org-latex-classes
-                   '("ustcthesis" "\\documentclass{ustcthesis}"
+                   `("ustcthesis" ,(concat "\\documentclass{ustcthesis}\n"
+                                           "[NO-DEFAULT-PACKAGE]\n"
+                                           "[PACKAGES]\n"
+                                           "[EXTRA]\n")
                      ("\\chapter{%s}" . "\\chapter*{%s}")
                      ("\\section{%s}" . "\\section*{%s}")
                      ("\\subsection{%s}" . "\\subsection*{%s}")
@@ -459,6 +461,7 @@
          (shell . t)
          (latex .t)
          (dot . t)
+         (org . t)
          (C . t)
          (perl . nil)
          (ruby . nil)
@@ -492,14 +495,6 @@
     :init
     (setq org-latex-prefer-user-labels t)
     :config (require 'ox-latex-subfigure)))
-
-(defun waldon-org/post-init-org-journal ()
-  (use-package org-journal
-    :config
-    (progn
-      (setq org-journal-enable-encryption t)
-      (setq org-journal-enable-agenda-integration t)
-      )))
 
 (defun waldon-org/init-ibuffer-hydra ()
   (use-package ibuffer-hydra
