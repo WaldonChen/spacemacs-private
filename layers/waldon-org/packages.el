@@ -391,9 +391,9 @@
                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
       (add-to-list 'org-latex-classes
                    `("ustcthesis" ,(concat "\\documentclass{ustcthesis}\n"
-                                           "[NO-DEFAULT-PACKAGE]\n"
-                                           "[PACKAGES]\n"
-                                           "[EXTRA]\n")
+                                           "[NO-DEFAULT-PACKAGES]\n"
+                                           "[EXTRA]\n"
+                                           "[PACKAGES]\n")
                      ("\\chapter{%s}" . "\\chapter*{%s}")
                      ("\\section{%s}" . "\\section*{%s}")
                      ("\\subsection{%s}" . "\\subsection*{%s}")
