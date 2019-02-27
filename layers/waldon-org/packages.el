@@ -46,76 +46,20 @@
       (add-to-list 'org-modules 'org-habit)
       (require 'org-habit)
 
-      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((emacs-lisp . t)
-         (python . t)
-         (latex . t)
-         ))
-
-      ;; (setq initial-major-mode 'org-mode)
+      (setq initial-major-mode 'org-mode)
 
       ;; "◉" "○" "✸" "◻" "❀" "✡"
       ;; "☰" "☷" "☯" "☭" "◉" "○" "✸" "✿" "■" "◆" "▲" "▶"
       (setq org-bullets-bullet-list '("☰" "☷" "☯" "☭" "◉" "○" "✸" "■" "◆" "▶"))
 
       (setq org-directory "~/Documents/org")
-
-      (setq org-agenda-file-note (expand-file-name "notes.org" org-directory))
       (setq org-agenda-file-gtd (expand-file-name "task.org" org-directory))
-      (setq org-agenda-file-code-snippet (expand-file-name "snippet.org" org-directory))
       (setq org-agenda-file-journal (expand-file-name "journal.org" org-directory))
+      (setq org-agenda-file-note (expand-file-name "notes.org" org-directory))
+      (setq org-agenda-file-code-snippet (expand-file-name "snippet.org" org-directory))
       (setq org-agenda-file-private (expand-file-name "private.org" org-directory))
       (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
       (setq org-agenda-files (list org-directory))
-
-      (setq org-todo-keywords
-            '((sequence "TODO(t)" "FEEDBACK(e!)" "VERIFY(j)" "STARTED(g!)" "|" "DONE(d@/!)" "ABORT(a@/!)")
-              (sequence "NEXT(n)" "SPECIFIED(i!)")
-              (sequence "WAITTING(w)" "SOMEDAY(m)" "|" "CANCELLED(c@)")
-              (sequence "REPORT(r@)" "BUG(b@)" "KNOWN-CAUSE(k@)" "|" "FIXED(f!)")
-              (sequence "SUBMITTED(s!)" "REVISION(v)" "|" "ACCEPTED(A!)" "PUBLISHED(p!)")))
-
-      (setq org-tag-alist
-            '((:startgroup)
-              ("@office" . ?o) ("@home" . ?H) ("@way" . ?e)
-              (:endgroup)
-              ("secret" . ?s)
-              ("WAITTING" . ?w)
-              ("HOLD" . ?h)
-              ("PERSONAL" . ?P)
-              ("WORK". ?W)
-              ("ORG" . ?O)
-              ("NOTE" . ?n)
-              ("CANCELLED" . ?C)
-              ("COMPUTER" . ?c)
-              ("PHONE" . ?p)))
-
-      (require 'org-crypt)
-
-      ;; 當被加密的部份要存入硬碟時，自動加密回去
-      (org-crypt-use-before-save-magic)
-
-      ;; 設定要加密的 tag 標籤為 secret
-      (setq org-crypt-tag-matcher "secret")
-
-      ;; 避免 secret 這個 tag 被子項目繼承 造成重複加密
-      ;; (但是子項目還是會被加密喔)
-      (setq org-tags-exclude-from-inheritance (quote ("secret")))
-
-      ;; 用於加密的 GPG 金鑰
-      ;; 可以設定任何 ID 或是設成 nil 來使用對稱式加密 (symmetric encryption)
-      (setq org-crypt-key "waldonchen@gmail.com")
-
-      ;;(setq auto-save-default nil)
-      ;; Auto-saving does not cooperate with org-crypt.el: so you need
-      ;; to turn it off if you plan to use org-crypt.el quite often.
-      ;; Otherwise, you'll get an (annoying) message each time you
-      ;; start Org.
-
-      ;; To turn it off only locally, you can insert this:
-      ;;
-      ;; # -*- buffer-auto-save-file-name: nil; -*-
 
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Org Agenda
@@ -128,7 +72,20 @@
       (setq org-log-done t)
 
       (setq org-agenda-custom-commands
-            (quote (("N" "Notes" tags "NOTE"
+            (quote (("P" "Projects" ((tags "PROJECT")))
+                    ("H" "Office and Home Lists"
+                     ((agenda)
+                      (tags-todo "OFFICE")
+                      (tags-todo "HOME")
+                      (tags-todo "COMPUTER")
+                      (tags-todo "READING")))
+                    ("D" "Daily Action List"
+                     ((agenda "" ((org-agenda-ndays 1)
+                                  (org-agenda-sorting-strategy
+                                   (quote ((agenda time-up priority-down tag-up))))
+                                  (org-deadline-warning-days 0)
+                                  ))))
+                    ("N" "Notes" tags "NOTE"
                      ((org-agenda-overriding-header "Notes")
                       (org-tags-match-list-sublevels t)))
                     ("n" "Agenda and all TODOs"
@@ -208,7 +165,7 @@
       ;; 未分类内容
       (add-to-list 'org-capture-templates
                    '("i" "Inbox" entry
-                     (file org-default-notes-file)
+                     (file org-default-file-gtd)
                      "* %U - %^{标题} %^g\n  %?\n" :empty-lines 1))
       ;; 任务系统
       (add-to-list 'org-capture-templates '("t" "Tasks"))
@@ -348,6 +305,12 @@
 
       (setq org-latex-classes nil)
       (add-to-list 'org-latex-classes
+	                 '("beamer"
+		                 "\\documentclass[presentation]{beamer}"
+		                 ("\\section{%s}" . "\\section*{%s}")
+		                 ("\\subsection{%s}" . "\\subsection*{%s}")
+		                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      (add-to-list 'org-latex-classes
                    '("article" "\\documentclass[11pt]{article}"
                      ("\\section{%s}" . "\\section*{%s}")
                      ("\\subsection{%s}" . "\\subsection*{%s}")
@@ -401,6 +364,13 @@
                      ("\\paragraph{%s}" . "\\paragraph*{%s}")
                      ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
       (add-to-list 'org-latex-classes
+                   '("IEEEtran" "\\documentclass[]{IEEEtran}\n"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      (add-to-list 'org-latex-classes
                    '("cn-article" "\\documentclass[11pt]{ctexart}
 [NO-DEFAULT-PACKAGES]
 \\usepackage[utf8]{inputenc}
@@ -447,7 +417,7 @@
 
       (setq org-latex-default-class "ctexart")
       (setq org-latex-pdf-process
-            '("latexmk -pdflatex='%latex -interaction nonstopmode' -pdf -bibtex -outdir='%o' -f %f"))
+            '("latexmk -pdflatex='%latex  --shell-escape -interaction nonstopmode -synctex=1' -pdf -bibtex -outdir='%o' -f %f"))
 
       ;; use xelatex to compile babel
       (setq org-format-latex-header "% xelatex
