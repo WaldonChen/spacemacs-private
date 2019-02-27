@@ -481,6 +481,10 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+  ;; Ask for confirmation when leaving Emacs
+  (setq confirm-kill-emacs (quote y-or-n-p))
+
   (when (spacemacs/system-is-mac)
     (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 14 16))
   )
