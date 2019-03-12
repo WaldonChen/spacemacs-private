@@ -72,84 +72,124 @@
       (setq org-agenda-window-setup 'current-window)
       (setq org-log-done t)
 
+      (setq org-tag-alist '((:startgroup . nil)
+                            ("@office" . ?w) ("@home" . ?h) ("@errands" . ?e)
+                            (:endgroup . nil)
+                            (:startgroup . nil)
+                            ("computer" . ?c) ("phone" . ?p) ("car" . ?C)
+                            (:endgroup . nil)
+                            ("PROJECT" . ?P)))
+
+      (setq org-todo-keywords
+            '((sequence "TODO(t)" "FEEDBACK(e!)" "VERIFY(j)" "STARTED(g!)" "|" "DONE(d@/!)" "ABORT(a@/!)")
+              (sequence "NEXT(n)" "SPECIFIED(i!)")
+              (sequence "WAITING(w)" "SOMEDAY(m)" "|" "CANCELLED(c@)")
+              (sequence "REPORT(r@)" "BUG(b@)"  "KNOWN-CAUSE(k@)" "|" "FIXED(f!)") ;; for coding
+              (sequence "SUBMITTED(s!)" "REVISION(v)" "|" "ACCEPTED(A!)" "PUBLISHED(p!)") ;; for paper submission
+              ))
+
+      (setq org-stuck-projects
+            '("+PROJECT/-MAYBE-DONE" ("TODO" "NEXT" "NEXTACTION") nil ""))
+
       (setq org-agenda-custom-commands
             '(("P" "Projects" ((tags "PROJECT")))
-               ("H" "Office and Home Lists"
-                ((agenda)
-                 (tags-todo "OFFICE")
-                 (tags-todo "HOME")
-                 (tags-todo "COMPUTER")
-                 (tags-todo "READING")
-                 ))
-               ("D" "Daily Action List"
-                ((agenda "" ((org-agenda-ndays 1)
-                             (org-agenda-sorting-strategy '(((agenda time-up priority-down tag-up))))))))
-               ("N" "Notes" tags "NOTE"
-                ((org-agenda-overriding-header "Notes")
-                 (org-tags-match-list-sublevels t)))
-               ("n" "Agenda and all TODOs"
-                ((agenda #1="")
-                 (tags "REFILE"
-                       ((org-agenda-overriding-header "Tasks to Refile")
-                        (org-tags-match-list-sublevels nil)))
-                 (tags-todo "-CANCELLED/!"
-                            ((org-agenda-overriding-header "Stuck Projects")
-                             (org-agenda-skip-function 'waldon-org/skip-non-stack-projects)
-                             (org-agenda-sorting-strategy '(category-keep))))
-                 (tags-todo "-HOLD-CANCELLED/!"
-                            ((org-agenda-overriding-header "Projects")
-                             (org-agenda-skip-function 'waldon-org/skip-non-stack-projects)
-                             (org-tags-match-list-sublevels 'indented)
-                             (org-agenda-sorting-strategy '(category-keep))))
-                 (tags-todo "-CANCELLED/!NEXT"
-                            ((org-agenda-overriding-header (concat "Project Next Tasks"
-                                                                   (if waldon-org/hide-scheduled-and-waiting-next-tasks
-                                                                       ""
-                                                                     " (including WAITING and SCHEDULED tasks)")))
-                             (org-agenda-skip-function 'waldon-org/skip-projects-and-single-tasks)
-                             (org-tags-match-list-sublevels t)
-                             (org-agenda-todo-ignore-scheduled waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-todo-ignore-deadlines waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-todo-ignore-with-date waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-sorting-strategy
-                              '(todo-state-down effort-up category-keep))))
-                 (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
-                            ((org-agenda-overriding-header (concat "Project Subtasks"
-                                                                   (if waldon-org/hide-scheduled-and-waiting-next-tasks
-                                                                       ""
-                                                                     " (including WAITING and SCHEDULED tasks)")))
-                             (org-agenda-skip-function 'waldon-org/skip-non-project-tasks)
-                             (org-agenda-todo-ignore-scheduled waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-todo-ignore-deadlines waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-todo-ignore-with-date waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-sorting-strategy
-                              '(category-keep))))
-                 (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
-                            ((org-agenda-overriding-header (concat "Standalone Tasks"
-                                                                   (if waldon-org/hide-scheduled-and-waiting-next-tasks
-                                                                       ""
-                                                                     " (including WAITING and SCHEDULED tasks)")))
-                             (org-agenda-skip-function 'waldon-org/skip-project-tasks)
-                             (org-agenda-todo-ignore-scheduled waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-todo-ignore-deadlines waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-todo-ignore-with-date waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-sorting-strategy
-                              '(category-keep))))
-                 (tags-todo "-CANCELLED+WAITING|HOLD/!"
-                            ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
-                                                                   (if waldon-org/hide-scheduled-and-waiting-next-tasks
-                                                                       ""
-                                                                     " (including WAITING and SCHEDULED tasks)")))
-                             (org-agenda-skip-function 'waldon-org/skip-non-tasks)
-                             (org-tags-match-list-sublevels nil)
-                             (org-agenda-todo-ignore-scheduled waldon-org/hide-scheduled-and-waiting-next-tasks)
-                             (org-agenda-todo-ignore-deadlines waldon-org/hide-scheduled-and-waiting-next-tasks)))
-                 (tags "-REFILE/"
-                       ((org-agenda-overriding-header "Tasks to Archive")
-                        (org-agenda-skip-function 'waldon-org/skip-non-archivable-tasks)
-                        (org-tags-match-list-sublevels nil)))
-                 (alltodo #1#)))
-               ))
+              ("p" . "Priorities")
+              ("pa" "A items" tags-todo "+PRIORITY=\"A\"")
+              ("pb" "B items" tags-todo "+PRIORITY=\"B\"")
+              ("pc" "C items" tags-todo "+PRIORITY=\"C\"")
+              ("g" . "GTD contexts")
+              ("go" "Office" tags-todo "office")
+              ("gc" "Computer" tags-todo "computer")
+              ("gp" "Phone" tags-todo "phone")
+              ("gh" "Home" tags-todo "home")
+              ("ge" "Errands" tags-todo "errands")
+              ("G" "GTD Block Agenda"
+               ((tags-todo "office")
+                (tags-todo "computer")
+                (tags-todo "phone")
+                (tags-todo "home")
+                (tags-todo "errands"))
+               nil)
+              ("D" "Daily Action List"
+               ((agenda "" ((org-agenda-ndays 1)
+                            (org-agenda-sorting-strategy '(((agenda time-up priority-down tag-up))))))))
+              ("N" "Notes" tags "NOTE"
+               ((org-agenda-overriding-header "Notes")
+                (org-tags-match-list-sublevels t)))
+              ("n" "Agenda and all TODOs"
+               ((agenda #1="")
+                (tags "REFILE"
+                      ((org-agenda-overriding-header "Tasks to Refile")
+                       (org-tags-match-list-sublevels nil)))
+                (tags-todo "-CANCELLED/!"
+                           ((org-agenda-overriding-header "Stuck Projects")
+                            (org-agenda-skip-function 'waldon-org/skip-non-stuck-projects)
+                            (org-agenda-sorting-strategy '(category-keep))))
+                (tags-todo "-HOLD-CANCELLED/!"
+                           ((org-agenda-overriding-header "Projects")
+                            (org-agenda-skip-function 'waldon-org/skip-non-stack-projects)
+                            (org-tags-match-list-sublevels 'indented)
+                            (org-agenda-sorting-strategy '(category-keep))))
+                (tags-todo "-CANCELLED/!NEXT"
+                           ((org-agenda-overriding-header (concat "Project Next Tasks"
+                                                                  (if waldon-org/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'waldon-org/skip-projects-and-single-tasks)
+                            (org-tags-match-list-sublevels t)
+                            (org-agenda-todo-ignore-scheduled waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(todo-state-down effort-up category-keep))))
+                (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                           ((org-agenda-overriding-header (concat "Project Subtasks"
+                                                                  (if waldon-org/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'waldon-org/skip-non-project-tasks)
+                            (org-agenda-todo-ignore-scheduled waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                           ((org-agenda-overriding-header (concat "Standalone Tasks"
+                                                                  (if waldon-org/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'waldon-org/skip-project-tasks)
+                            (org-agenda-todo-ignore-scheduled waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                           ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
+                                                                  (if waldon-org/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'waldon-org/skip-non-tasks)
+                            (org-tags-match-list-sublevels nil)
+                            (org-agenda-todo-ignore-scheduled waldon-org/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines waldon-org/hide-scheduled-and-waiting-next-tasks)))
+                (tags "-REFILE/"
+                      ((org-agenda-overriding-header "Tasks to Archive")
+                       (org-agenda-skip-function 'waldon-org/skip-non-archivable-tasks)
+                       (org-tags-match-list-sublevels nil)))
+                (alltodo #1#)))
+              ("c" "Calendar" agenda ""
+               ((org-agenda-span 7)
+                (org-agenda-start-on-weekday 0)
+                (org-agenda-time-grid nil)
+                (org-agenda-repeating-timestamp-show-all t)
+                (org-agenda-entry-types '(:timestamp :sexp))))
+              ("d" "Upcoming deadlines" agenda ""
+               ((org-agenda-time-grid nil)
+                (org-deadline-warning-days 365)
+                (org-agenda-entry-types '(:deadline))
+                ))
+              ))
 
 
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
