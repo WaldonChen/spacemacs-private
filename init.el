@@ -49,7 +49,7 @@ This function should only modify configuration layer settings."
      (git :variables git-magit-status-fullscreen t)
      markdown
      multiple-cursors
-     neotree
+     treemacs
      (org :variables org-want-todo-bindings t)
      (shell :variables
             shell-default-height 30
