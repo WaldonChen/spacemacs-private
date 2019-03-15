@@ -312,3 +312,9 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
             ;; earlier in the file
             (reverse positions))))
   )
+
+(defun waldon-org/transform-square-brackets-to-round-ones (string-to-transform)
+  "Transforms [ into ( and ] into ), other chars left unchanged."
+  (concat
+   (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c)))
+           string-to-transform)))

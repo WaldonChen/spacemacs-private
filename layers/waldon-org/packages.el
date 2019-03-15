@@ -44,7 +44,9 @@
       (require 'org-compat)
       (require 'org)
       (add-to-list 'org-modules 'org-habit)
+      (add-to-list 'org-modules 'org-protocol)
       (require 'org-habit)
+      (require 'org-protocol)
       (require 'org-tempo)
 
       (setq initial-major-mode 'org-mode)
@@ -203,7 +205,7 @@
       (setq org-capture-templates
             '(
               ;; 未分类的内容
-              ("i" "Inbox" entry (file org-default-notes-file)
+              ("i" "Inbox" entry (file+headline org-default-notes-file "Inbox")
                "* TODO %?\n  %T\n  %a\n  %i")
               ;; 日志
               ("j" "Journal" entry (file+olp+datetree org-agenda-file-journal)
@@ -217,10 +219,16 @@
               ;; 论文阅读
               ("p" "Paper Reading" entry (file+olp org-agenda-file-gtd "Reading" "Paper")
                "* TODO %^{Heading}\n  SCHEDULED: %^T DEADLINE: %^t\n  %?" :empty-lines 1)
+              ("n" "Notes" entry (file org-agenda-file-note)
+               "* %^{Heading} %t %^g\n  %?\n")
               ;; Snippets
               ("s" "Snippets" entry
                (file org-agenda-file-code-snippet)
                "* %^{Heading} %t %^g\n  %i%?\n" :empty-lines 1)
+              ("p" "Protocol" entry (file+headline org-default-notes-file "Inbox")
+               "* %^{Title}\n  Source: %u, %c\n\n  #+BEGIN_QUOTE\n%i\n  #+END_QUOTE\n\n  %?" :empty-lines 1)
+	            ("L" "Protocol Link" entry (file+headline org-default-notes-file "Inbox")
+               "* %? [[%:link][%(waldon-org/transform-square-brackets-to-round-ones \"%:description\")]]\n  Captured On: %U" :empty-lines 1)
               ))
 
       (setq org-refile-use-outline-path 'file)
