@@ -199,81 +199,29 @@
       (require 'org-capture)
 
       ;; configure org-capture templates
-      (setq org-capture-templates nil)
 
-      ;; 未分类内容
-      (add-to-list 'org-capture-templates
-                   '("i" "Inbox" entry
-                     (file org-default-file-gtd)
-                     "* %U - %^{标题} %^g\n  %?\n" :empty-lines 1))
-      ;; 任务系统
-      (add-to-list 'org-capture-templates '("t" "Tasks"))
-      ;; 普通任务
-      (add-to-list 'org-capture-templates
-                   '("ti" "General Task" entry
-                     (file+olp org-agenda-file-gtd "Inbox")
-                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
-                     :empty-lines 1))
-      ;; 书籍阅读任务
-      (add-to-list 'org-capture-templates
-                   '("tb" "Book Reading Task" entry
-                     (file+olp org-agenda-file-gtd "Reading" "Book")
-                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
-                     :empty-lines 1))
-      ;; 论文阅读任务
-      (add-to-list 'org-capture-templates
-                   '("tp" "Paper Reading Task" entry
-                     (file+olp org-agenda-file-gtd "Reading" "Paper")
-                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
-                     :empty-lines 1))
-      ;; 工作任务
-      (add-to-list 'org-capture-templates
-                   '("tw" "Work Task" entry
-                     (file+olp org-agenda-file-gtd "Work")
-                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
-                     :clock-in t :clock-resume t :empty-lines 1))
-      ;; 写作任务
-      (add-to-list 'org-capture-templates
-                   '("tB" "Blog Writing Task" entry
-                     (file+olp org-agenda-file-gtd "Knowledge" "Blog")
-                     "* TODO %^{标题}\n  SCHEDULED: %^T DEADLINE: %^t\n\n  %?"
-                     :empty-lines 1))
-      ;; Snippets
-      (add-to-list 'org-capture-templates
-                   `("s" "Snippets" entry
-                     (file org-agenda-file-code-snippet)
-                     "* %^{标题} %t %^g\n  %?\n" :empty-lines 1))
-      ;; 日记
-      (add-to-list 'org-capture-templates
-                   `("j" "Journal" entry
-                     (file+datetree org-agenda-file-journal)
-                     "* %U - %^{标题} %^g\n  %?\n" :empty-lines 1))
-      ;; 账单
-      (add-to-list 'org-capture-templates
-                   `("b" "Billing" plain
-                     (file+function org-agenda-file-private waldon-org/find-month-tree)
-                     "   | %U | %^{类别} | %^{描述} | %^{金额} | %^{备注} |" :kill-buffer t))
-      ;; 联系人
-      (add-to-list 'org-capture-templates
-                   `("c" "Contacts" entry
-                     (file+headline org-agenda-file-private "Contacts")
-                     "* %^{姓名} %^{手机号}p %^{邮箱}p %^{住址}p\n\n  %?" :empty-lines 1))
-      ;; 约会
-      (add-to-list 'org-capture-templates
-                   '("m" "Meeting" entry
-                     (file ord-default-notes-file)
-                     "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t))
-      ;; 电话
-      (add-to-list 'org-capture-templates
-                   '("c" "Phone call" entry
-                     (file org-default-notes-file)
-                     "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t))
-      ;; 回复
-      (add-to-list 'org-capture-templates
-                   '("r" "Respond" entry
-                     (file org-default-notes-file)
-                     "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n"
-                     :clock-in t :clock-resume t :immediate-finish t))
+      (setq org-capture-templates
+            '(
+              ;; 未分类的内容
+              ("i" "Inbox" entry (file org-default-notes-file)
+               "* TODO %?\n  %T\n  %a\n  %i")
+              ;; 日志
+              ("j" "Journal" entry (file+olp+datetree org-agenda-file-journal)
+               "* %U - %^{Heading} %^g\n  %i%?\n" :empty-lines 1)
+              ;; 立刻开始的任务
+              ("t" "Work Task" entry (file+headline org-agenda-file-gtd "Work")
+               "* TODO %^{Heading}\n  %u\n  %i\n  %?\n  %a\n" :clock-in t :clock-resume t :empty-lines 1)
+              ;; 书籍阅读
+              ("b" "Book Reading" entry (file+olp org-agenda-file-gtd "Reading" "Book")
+               "* TODO %^{Heading}\n  SCHEDULED: %^T DEADLINE: %^t\n  %?" :empty-lines 1)
+              ;; 论文阅读
+              ("p" "Paper Reading" entry (file+olp org-agenda-file-gtd "Reading" "Paper")
+               "* TODO %^{Heading}\n  SCHEDULED: %^T DEADLINE: %^t\n  %?" :empty-lines 1)
+              ;; Snippets
+              ("s" "Snippets" entry
+               (file org-agenda-file-code-snippet)
+               "* %^{Heading} %t %^g\n  %i%?\n" :empty-lines 1)
+              ))
 
       (setq org-refile-use-outline-path 'file)
       (setq org-outline-path-complete-in-steps nil)
