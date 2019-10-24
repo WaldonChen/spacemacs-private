@@ -35,6 +35,7 @@
     org-ref
     (ox-latex-subfigure :location local)
     (ibuffer-hydra :location local)
+    anaconda-mode
     ))
 
 (defun waldon-org/post-init-org ()
@@ -493,4 +494,13 @@
     ;(require 'ibuffer-hydra)
     (define-key ibuffer-mode-map "." 'hydra-ibuffer-main/body)
     ))
+
+(defun no-tramp-eldoc ()
+  (interactive)
+  (if tramp-mode
+      (turn-off-anaconda-eldoc-mode)))
+
+(defun waldon-org/post-init-anaconda-mode ()
+  (add-hook 'python-mode-hook #'no-tramp-eldoc))
+
 ;;; packages.el ends here
