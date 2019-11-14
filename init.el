@@ -495,7 +495,7 @@ before packages are loaded."
   ;; Ask for confirmation when leaving Emacs
   (setq confirm-kill-emacs (quote y-or-n-p))
 
-  (when (spacemacs/system-is-mac)
+  (when (and (spacemacs/system-is-mac) (display-graphic-p))
     (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 14 16))
   )
 
