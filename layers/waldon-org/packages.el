@@ -36,6 +36,7 @@
     (ox-latex-subfigure :location local)
     (ibuffer-hydra :location local)
     anaconda-mode
+    bazel-mode
     ))
 
 (defun waldon-org/post-init-org ()
@@ -498,9 +499,14 @@
 (defun no-tramp-eldoc ()
   (interactive)
   (if tramp-mode
-      (turn-off-anaconda-eldoc-mode)))
+      (anaconda-eldoc-mode -1)))
 
 (defun waldon-org/post-init-anaconda-mode ()
   (add-hook 'python-mode-hook #'no-tramp-eldoc))
+
+(defun waldon-org/init-bazel-mode ()
+  (use-package bazel-mode
+    :config (add-hook 'bazel-mode-hook
+                      (lambda () (add-hook 'before-save-hook #'bazel-format nil t)))))
 
 ;;; packages.el ends here

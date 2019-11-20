@@ -59,7 +59,9 @@ This function should only modify configuration layer settings."
                       syntax-checking-enable-by-default nil
                       syntax-checking-enable-tooltips nil)
      ;; version-control
-     (c-c++ :variables c-c++-default-mode-for-headers 'c++-mode)
+     (c-c++ :variables
+            c-c++-enable-google-style t
+            c-c++-default-mode-for-headers 'c++-mode)
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      cmake
      python
